@@ -36,6 +36,6 @@ public class User extends AbstractAuditingEntity<String> {
     @Column(name = "role")
     private UserRole role = UserRole.CUSTOMER;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = fe, orphanRemoval = true)
     private List<Cart> carts = new ArrayList<>();
 }

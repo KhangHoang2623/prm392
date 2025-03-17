@@ -25,4 +25,12 @@ public class CartItemEntity extends AbstractAuditingEntity<String>{
 
     @Column(name = "price")
     private double price;
+
+    @PrePersist
+    @PreUpdate
+    private void calculatePrice() {
+        if (product != null) {
+            this.price = this.quantity * product.getPrice();
+        }
+    }
 }

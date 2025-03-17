@@ -23,13 +23,20 @@ public class Cart extends AbstractAuditingEntity<String>{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private CartStatus role;
+    private CartStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
+
+
+    public void calculateTotalPrice() {
+        this.price = cartItems.stream()
+                .mapToDouble(cartItem -> cartItem.getQuantity() * cartItem.getProduct().getPrice())
+                .sum();
+    }
 }

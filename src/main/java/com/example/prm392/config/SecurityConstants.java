@@ -11,7 +11,11 @@ public class SecurityConstants {
             "/swagger-ui/**",
             "/v3/api-docs",
             "/v3/api-docs/**",
-            "/upload"
+            "/upload",
+            "/api/category",
+            "/api/category/.*/product",
+            "/api/product/**",
+            "/api/product"
     );
 
 

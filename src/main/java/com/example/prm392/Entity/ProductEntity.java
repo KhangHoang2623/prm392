@@ -1,5 +1,7 @@
 package com.example.prm392.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +34,6 @@ public class ProductEntity extends AbstractAuditingEntity<String>{
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonBackReference
     private CategoryEntity category;
 }

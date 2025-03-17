@@ -51,7 +51,7 @@ public class SecurityConfig {
 
                         // ✅ Các API công khai
                         .requestMatchers(SecurityConstants.PUBLIC_URIS.toArray(String[]::new)).permitAll()
-
+                        .requestMatchers(mvc.pattern("/api/category/{categoryId}/product")).permitAll()
 
 
                         // 🔒 Còn lại phải xác thực

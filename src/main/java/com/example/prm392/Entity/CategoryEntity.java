@@ -1,6 +1,7 @@
 package com.example.prm392.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,5 +21,6 @@ public class CategoryEntity extends AbstractAuditingEntity<String>{
     String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ProductEntity> products = new ArrayList<>();
 }
