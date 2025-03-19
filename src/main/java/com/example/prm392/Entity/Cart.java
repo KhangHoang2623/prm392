@@ -33,7 +33,8 @@ public class Cart extends AbstractAuditingEntity<String>{
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
 
-
+    @PrePersist
+    @PreUpdate
     public void calculateTotalPrice() {
         this.price = cartItems.stream()
                 .mapToDouble(cartItem -> cartItem.getQuantity() * cartItem.getProduct().getPrice())

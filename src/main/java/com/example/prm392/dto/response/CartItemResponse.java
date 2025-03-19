@@ -13,9 +13,8 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 public class CartItemResponse {
-     String name;
-     String imageUrl;
-     Double pricePerItem;
+     String id;
      int quantity;
-     Double totalPrice;
+     double price;
+     ProductDTOResponse product;
 }

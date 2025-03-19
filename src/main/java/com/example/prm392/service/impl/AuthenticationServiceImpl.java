@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public User register(LoginRegisterRequest request) {
-        if(accountRepository.findByEmail(request.getUsername()).isPresent()){
+        if(accountRepository.findByUsername(request.getUsername()).isPresent()){
             throw new AuthenticationException(HttpStatus.OK.getReasonPhrase(), "Username already exists");
         }
         final var newAccount = User.builder()
