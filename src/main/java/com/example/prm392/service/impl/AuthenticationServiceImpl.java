@@ -1,12 +1,15 @@
 package com.example.prm392.service.impl;
 
 
+import com.example.prm392.Entity.Cart;
+import com.example.prm392.Entity.CartItemEntity;
 import com.example.prm392.Entity.Enum.UserRole;
 import com.example.prm392.Entity.User;
 import com.example.prm392.config.SecurityProperties;
 import com.example.prm392.dto.request.LoginRegisterRequest;
 import com.example.prm392.dto.response.LoginResponse;
 import com.example.prm392.repositoriy.AccountRepository;
+import com.example.prm392.repositoriy.CartRepository;
 import com.example.prm392.service.AuthenticationService;
 import com.example.prm392.utils.JwtUtils;
 import com.example.prm392.web.error.ExceptionDefine.AuthenticationException;
@@ -19,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -28,6 +32,7 @@ import java.util.UUID;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     AccountRepository accountRepository;
+    CartRepository cartRepository;
     PasswordEncoder passwordEncoder;
     SecurityProperties securityProperties;
 
@@ -42,7 +47,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .role(UserRole.CUSTOMER)
                 .build();
+
+        Cart newCart = Cart.builder()
+                .user(newAccount)
+                .cartItems(new ArrayList<>())
+                .build();
+
+
         accountRepository.save(newAccount);
+        cartRepository.save(newCart);
         return newAccount;
     }
 
