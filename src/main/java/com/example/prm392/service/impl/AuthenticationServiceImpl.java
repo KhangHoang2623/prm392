@@ -3,6 +3,7 @@ package com.example.prm392.service.impl;
 
 import com.example.prm392.Entity.Cart;
 import com.example.prm392.Entity.CartItemEntity;
+import com.example.prm392.Entity.Enum.CartStatus;
 import com.example.prm392.Entity.Enum.UserRole;
 import com.example.prm392.Entity.User;
 import com.example.prm392.config.SecurityProperties;
@@ -51,6 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Cart newCart = Cart.builder()
                 .user(newAccount)
                 .cartItems(new ArrayList<>())
+                .status(CartStatus.ACTIVE)
                 .build();
 
 
