@@ -1,9 +1,6 @@
 package com.example.prm392.web.error;
 
-import com.example.prm392.web.error.ExceptionDefine.AuthenticationException;
-import com.example.prm392.web.error.ExceptionDefine.BusinessException;
-import com.example.prm392.web.error.ExceptionDefine.ConflictException;
-import com.example.prm392.web.error.ExceptionDefine.NotFoundException;
+import com.example.prm392.web.error.ExceptionDefine.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
@@ -43,12 +40,25 @@ public class ExceptionTranslator implements ResponseErrorHandler {
         return new ResponseEntity<>(result, HttpStatus.CONFLICT);
     }
 
+    private ResponseEntity<ErrorResponse> fail(ErrorResponse result){
+        return new ResponseEntity<>(result, HttpStatus.NOT_ACCEPTABLE);
+    }
 
+    @ExceptionHandler(FailedException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("service", ex.getMessage());
+        return internalServerError(
+                new ErrorResponse(ErrorConstant.NOT_ACCEPTABLE.getCode(),
+                        "Failed Exception", map)
+        );
+    }
 
 
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+    ResponseEntity<ErrorResponse> handleFailException(BusinessException ex) {
         Map<String, Object> map = new HashMap<>();
         map.put("service", ex.getMessage());
         return internalServerError(

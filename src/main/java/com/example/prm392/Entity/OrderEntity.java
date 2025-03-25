@@ -31,9 +31,11 @@ public class OrderEntity extends AbstractAuditingEntity<String> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Status")
+    @Builder.Default
     private OrderStatus status = OrderStatus.PROCESSING;
 
     @Column(name = "order_date", updatable = false)
+    @Builder.Default
     private Instant oderDate = Instant.now();
 
     @ManyToOne

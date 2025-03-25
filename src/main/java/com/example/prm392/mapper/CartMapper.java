@@ -30,4 +30,6 @@ public interface CartMapper extends EntityMapper<CartResponse, Cart> {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "cartItems", source = "cartItems")
     List<CartResponse> toCartDTO(List<Cart> cart);
+
+
 }

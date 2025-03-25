@@ -15,7 +15,8 @@ public class SecurityConstants {
             "/api/category",
             "/api/category/.*/product",
             "/api/product/**",
-            "/api/product"
+            "/api/product",
+            "/api/cart/orderSucess"
     );
 
 

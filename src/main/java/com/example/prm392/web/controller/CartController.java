@@ -9,6 +9,8 @@ import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+
 @RequestMapping("/api/cart")
 public interface CartController {
 
@@ -31,4 +33,18 @@ public interface CartController {
     @PutMapping("/updateCartItem/{cartItemId}")
     @ResponseStatus(HttpStatus.OK)
     Response<?> updateCartItem(@PathVariable String cartItemId, final int quantity, final QuantityAction action);
+
+
+    @PostMapping("/createACart/")
+    @ResponseStatus(HttpStatus.CREATED)
+    Response<?> createACart();
+
+    @PostMapping("/payout")
+    @ResponseStatus(HttpStatus.OK)
+    Response<?> payout(@RequestParam String cartItemId) throws UnsupportedEncodingException;
+
+    @GetMapping("/orderSucess")
+    @ResponseStatus(HttpStatus.OK)
+    Response<?> orderSucces(@RequestParam String vnp_TxnRef,
+                            @RequestParam String vnp_ResponseCode);
 }
