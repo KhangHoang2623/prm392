@@ -28,7 +28,8 @@ public class OpenApiConfig {
 
         return new OpenAPI().info(new Info().title("PRM392").version("1.0"))
                 .addServersItem(new Server().url("http://localhost:8080"))
-                .addServersItem(new Server().url("http://14.225.254.90:8080"));
+                .addServersItem(new Server().url("http://14.225.254.90:8080"))
+                 .addServersItem(new Server().url("http://14.225.210.153:8080"));
 
     }
 

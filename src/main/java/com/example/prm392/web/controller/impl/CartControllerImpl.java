@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+
 
 @Slf4j
 @RestController
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartControllerImpl implements CartController {
 
     private final CartService cartService;
+
 
     @Override
     @Operation(summary = "Thêm 1 product vào giỏ hàng cùng với số lượng của nó ",
@@ -59,6 +62,23 @@ public class CartControllerImpl implements CartController {
             description = "Truyền vào action (INCREASE or DECREASE) cùng với số lượng và id của cartitem")
     public Response<?> updateCartItem(String cartItemId, int quantity, QuantityAction action) {
         return Response.ok(cartService.updateQuantityOfCartItem(action, quantity, cartItemId));
+    }
+
+    @Override
+    @Operation(summary = "Tạo 1 Giỏ Hàng mới  ",
+            description = "Tạo 1 Giỏ Hàng mới ")
+    public Response<?> createACart() {
+        return Response.created(cartService.createACart());
+    }
+
+    @Override
+    public Response<?> payout(String cartItemId) throws UnsupportedEncodingException {
+        return Response.ok(cartService.payout(cartItemId));
+    }
+
+    @Override
+    public Response<?> orderSucces(String vnp_TxnRef, String vnp_ResponseCode) {
+        return Response.ok(cartService.orderSuccess(vnp_TxnRef, vnp_ResponseCode));
     }
 
 

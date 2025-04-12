@@ -19,4 +19,6 @@ public class ErrorConstant {
 
     //NotFound
     public static final MessageCode NOT_FOUND  = new MessageCode("404", "NOT FOUND");
+
+    public static final MessageCode NOT_ACCEPTABLE  = new MessageCode("406", "NOT ACCEPTABLE");
 }

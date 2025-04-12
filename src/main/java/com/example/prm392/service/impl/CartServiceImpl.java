@@ -1,19 +1,16 @@
 package com.example.prm392.service.impl;
 
-import com.example.prm392.Entity.Cart;
-import com.example.prm392.Entity.CartItemEntity;
+import com.example.prm392.Entity.*;
 import com.example.prm392.Entity.Enum.CartStatus;
 import com.example.prm392.Entity.Enum.QuantityAction;
-import com.example.prm392.Entity.ProductEntity;
-import com.example.prm392.Entity.User;
 import com.example.prm392.dto.request.AddToCartRequest;
 import com.example.prm392.dto.response.CartResponse;
 import com.example.prm392.mapper.CartMapper;
-import com.example.prm392.repositoriy.CartItemRepository;
-import com.example.prm392.repositoriy.CartRepository;
-import com.example.prm392.repositoriy.ProductRepository;
+import com.example.prm392.repositoriy.*;
 import com.example.prm392.service.CartService;
 import com.example.prm392.utils.ContextHolderUtils;
+import com.example.prm392.utils.VNPayUtil;
+import com.example.prm392.web.error.ExceptionDefine.FailedException;
 import com.example.prm392.web.error.ExceptionDefine.NotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -35,6 +35,7 @@ public class CartServiceImpl implements CartService {
     CartItemRepository _cartItemRepository;
     ProductRepository productRepository;
     CartMapper _cartMapper;
+    OrderRepository _oOrderRepository;
 
     @Transactional
     @Override
@@ -124,5 +125,46 @@ public class CartServiceImpl implements CartService {
             return "Update Failed";
         }
 
+    }
+
+    @Override
+    public CartResponse createACart() {
+        User getCurrentUser = ContextHolderUtils.getContext();
+        Cart newCart = Cart.builder()
+                .cartItems(new ArrayList<>())
+                .user(getCurrentUser)
+                .build();
+        _cartRepository.save(newCart);
+        return _cartMapper.toDto(newCart);
+    }
+
+    @Override
+    public String payout(String cartId) throws UnsupportedEncodingException {
+        Cart existingCart= _cartRepository.findById(cartId).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.getReasonPhrase()
+                , "Cart not found"));
+
+        return VNPayUtil.createPaymentUrl(existingCart.getId(), existingCart.getPrice());
+    }
+
+    @Transactional
+    @Override
+    public String orderSuccess(String vn_txnRef, String responseCode) {
+        Cart existingCart= _cartRepository.findById(vn_txnRef).orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.getReasonPhrase()
+                , "Cart not found"));
+        User user = existingCart.getUser();
+
+        if (Objects.equals(responseCode, "00") || Objects.equals(responseCode, "02")){
+            OrderEntity newOrderEntity = OrderEntity.builder()
+                    .cart(existingCart)
+                    .user(user)
+                    .build();
+
+            existingCart.setStatus(CartStatus.COMPLETED);
+            _cartRepository.save(existingCart);
+            _oOrderRepository.save(newOrderEntity);
+            return "Order Completed";
+        }else{
+            return "Failed To Confirm Order";
+        }
     }
 }
